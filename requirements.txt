@@ -1,5 +1,8 @@
-sklearn
-fastapi
-pandas
+sklearn~=0.0
+fastapi~=0.86.0
+pandas~=1.5.1
 pydantic
 uvicorn
+openpyxl~=3.0.10
+scikit-learn~=1.1.3
+starlette~=0.20.4
