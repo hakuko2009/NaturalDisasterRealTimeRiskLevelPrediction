@@ -5,11 +5,63 @@ import pandas as pd
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import BernoulliNB
-
+from fastapi import FastAPI, Form
+from starlette.responses import HTMLResponse
 import DataConvert
 import DataLoader
 
 source_file = 'data/emdat_public_2022_10_18.csv'
+app = FastAPI()
+
+
+@app.get('/')
+def basic_view():
+    return {"WELCOME": "GO TO /docs route, or /post or send post request to /predict "}
+
+
+@app.get('/predict', response_class=HTMLResponse)
+def take_inp():
+    return '''<form method="post">
+            <input maxlength="28" name="text" type="text" value="Text Emotion to be tested" />
+            <input type="submit" />'''
+
+
+@app.post('/predict')
+def predict():
+    year = 2022
+    type = "Drought"
+    region = "South-Eastern Asia"
+    magValue = 3000
+    magScale = "Kph"
+    startMonth = 9
+    endMonth = 9
+
+    detectionFile = open('detection.h5', 'rb')
+    loadedModel = pickle.load(detectionFile)
+    detectionFile.close()
+
+    typeFile = open('TypeEncoder.pickle', 'rb')
+    typeEn = pickle.load(typeFile)
+    typeFile.close()
+
+    regionFile = open('RegionEncoder.pickle', 'rb')
+    regionEn = pickle.load(regionFile)
+    regionFile.close()
+
+    magScaleFile = open('MagScaleEncoder.pickle', 'rb')
+    magScaleEn = pickle.load(magScaleFile)
+    magScaleFile.close()
+
+    encodedType = typeEn.transform([type])
+    encodedRegion = regionEn.transform([region])
+    encodedMagScale = magScaleEn.transform([magScale])
+
+    caseDict = [[year, encodedType[0], encodedRegion[0], magValue,
+                 encodedMagScale[0], startMonth, endMonth]]
+
+    print(caseDict)
+    result = loadedModel.predict(caseDict)[0]
+    return {result}
 
 
 def _case_features(caseFeatures):
@@ -67,13 +119,15 @@ class LevelClassifier:
 
         naiveBayesModel = BernoulliNB()
         naiveBayesModel.fit(X_train, Y_train)
-        file = open('detection.pickle', 'wb')
+        
+        file = open('detection.h5', 'wb')
         pickle.dump(naiveBayesModel, file)
 
 
 if __name__ == "__main__":
     gp = LevelClassifier()
     gp.train_and_test()
+
     # print('Accuracy: %f' % metrics.accuracy_score(y_test, y_pred))
 
     year = 2000
