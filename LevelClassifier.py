@@ -1,12 +1,14 @@
 import os
 import pickle
+import string
 
 import pandas as pd
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import BernoulliNB
-from fastapi import FastAPI, Form
-from starlette.responses import HTMLResponse
+from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
+from starlette.responses import JSONResponse
 import DataConvert
 import DataLoader
 
@@ -19,22 +21,24 @@ def basic_view():
     return {"WELCOME": "GO TO /docs route, or /post or send post request to /predict "}
 
 
-@app.get('/predict', response_class=HTMLResponse)
-def take_inp():
-    return '''<form method="post">
-            <input maxlength="28" name="text" type="text" value="Text Emotion to be tested" />
-            <input type="submit" />'''
+# @app.get('/predict/')
+# async def take_inp():
+#     return '''<form method="post">
+#             <input maxlength="28" name="text" type="text" value="Text Emotion to be tested" />
+#             <input type="submit" />'''
 
 
-@app.post('/predict')
-def predict():
-    year = 2022
-    type = "Drought"
-    region = "South-Eastern Asia"
-    magValue = 3000
-    magScale = "Kph"
-    startMonth = 9
-    endMonth = 9
+@app.get('/predict/', response_class=JSONResponse)
+def predict(year: int, type: str, region: str,
+                  magValue: float, magScale: str,
+                  startMonth: int, endMonth: int):
+    # year = 2022
+    # type = "Drought"
+    # region = "South-Eastern Asia"
+    # magValue = 3000
+    # magScale = "Kph"
+    # startMonth = 9
+    # endMonth = 9
 
     detectionFile = open('detection.h5', 'rb')
     loadedModel = pickle.load(detectionFile)
@@ -61,7 +65,7 @@ def predict():
 
     print(caseDict)
     result = loadedModel.predict(caseDict)[0]
-    return {result}
+    return JSONResponse(content=jsonable_encoder(obj=int(result)), media_type="application/json")
 
 
 def _case_features(caseFeatures):
@@ -119,17 +123,12 @@ class LevelClassifier:
 
         naiveBayesModel = BernoulliNB()
         naiveBayesModel.fit(X_train, Y_train)
-        
+
         file = open('detection.h5', 'wb')
         pickle.dump(naiveBayesModel, file)
 
 
 if __name__ == "__main__":
-    gp = LevelClassifier()
-    gp.train_and_test()
-
-    # print('Accuracy: %f' % metrics.accuracy_score(y_test, y_pred))
-
     year = 2000
     type = "Flood"
     region = "South-Eastern Asia"
@@ -138,30 +137,4 @@ if __name__ == "__main__":
     startMonth = 5
     endMonth = 6
 
-    detectionFile = open('detection.pickle', 'rb')
-    model = pickle.load(detectionFile)
-    detectionFile.close()
-
-    typeFile = open('TypeEncoder.pickle', 'rb')
-    typeEn = pickle.load(typeFile)
-    typeFile.close()
-
-    regionFile = open('RegionEncoder.pickle', 'rb')
-    regionEn = pickle.load(regionFile)
-    regionFile.close()
-
-    magScaleFile = open('MagScaleEncoder.pickle', 'rb')
-    magScaleEn = pickle.load(magScaleFile)
-    magScaleFile.close()
-
-    encodedType = typeEn.transform([type])
-    encodedRegion = regionEn.transform([region])
-    encodedMagScale = magScaleEn.transform([magScale])
-
-    caseDict = [[year, encodedType[0], encodedRegion[0], magValue,
-                 encodedMagScale[0], startMonth, endMonth]]
-
-    print(caseDict)
-    print(model.predict(caseDict))
-
-    # print('\n%s is classified as %s' % (case, gp.classify(case)))
+    print(predict(year, type, region, magValue, magScale, startMonth, endMonth))
