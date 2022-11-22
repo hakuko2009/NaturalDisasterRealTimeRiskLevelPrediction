@@ -1,13 +1,13 @@
 class CaseOfDisaster:
-    def __init__(self, disNo, year, subtype, region, value, scale, startMonth, endMonth):
-        self.disNo = disNo
-        self.year = year
-        self.subtype = subtype
-        self.region = region
-        self.value = value
-        self.scale = scale
-        self.startMonth = startMonth
-        self.endMonth = endMonth
+    def __init__(self, temp, pressure, humidity, clouds, wind_speed, weather_main, weather_des, rain_1h):
+        self.temp = temp
+        self.pressure = pressure
+        self.humidity = humidity
+        self.clouds = clouds
+        self.wind_speed = wind_speed
+        self.weather_main = weather_main
+        self.weather_des = weather_des
+        self.rain_1h = rain_1h
         self.level = 1
 
     def __getitem__(self, item):

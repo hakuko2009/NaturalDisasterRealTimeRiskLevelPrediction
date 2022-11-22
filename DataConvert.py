@@ -22,24 +22,9 @@ def cleanAndConvert():
         data = 0
         i = i + 1
 
-        # Subtype
-        if str(sheet[f'G{i}'].value) == 'None':
-            sheet[f'G{i}'].value = 0
-        # Region
-        if str(sheet[f'M{i}'].value) == 'None':
-            sheet[f'M{i}'].value = 0
-        # Dis Mag Value
-        if str(sheet[f'W{i}'].value) == 'None':
-            sheet[f'W{i}'].value = 0
-        # Dis Mag Scale
-        if str(sheet[f'X{i}'].value) == 'None':
-            sheet[f'X{i}'].value = 0
-        # Start Month
-        if str(sheet[f'AD{i}'].value) == 'None':
-            sheet[f'AD{i}'].value = 0
-        # End Month
-        if str(sheet[f'AG{i}'].value) == 'None':
-            sheet[f'AG{i}'].value = 0
+        ##
+        # Need update
+        ##
         # Total Deaths
         if str(sheet[f'AI{i}'].value) == 'None':
             sheet[f'AI{i}'].value = 0
@@ -66,9 +51,9 @@ def cleanAndConvert():
         totalAffected = int(str(sheet[f'AM{i}'].value))
         if totalAffected == 0:
             sheet[f'AM{i}'].value = 0
-        elif 0 < totalAffected <= 1000:
+        elif 0 < totalAffected <= 500:
             sheet[f'AM{i}'].value = 1
-        elif 1000 < totalAffected < 100000:
+        elif 500 < totalAffected < 50000:
             sheet[f'AM{i}'].value = 2
         else:
             sheet[f'AM{i}'].value = 3
@@ -78,16 +63,16 @@ def cleanAndConvert():
         totalDamages = int(str(sheet[f'AS{i}'].value))
         if totalDamages == 0:
             sheet[f'AS{i}'].value = 0
-        elif 0 < totalDamages < 100000:
+        elif 0 < totalDamages < 50000:
             sheet[f'AS{i}'].value = 1
-        elif 100000 < totalDamages < 2000000:
+        elif 50000 < totalDamages < 1000000:
             sheet[f'AS{i}'].value = 2
         else:
             sheet[f'AS{i}'].value = 3
         data = data + int(sheet[f'AS{i}'].value)
 
         # Calculate risk level in average
-        sheet[f'AY{i}'].value = int(data / 3)
+        sheet[f'AY{i}'].value = int(round(data/3, 0))
 
     # Save and close file
     wb.save(excelFile[0])
@@ -95,5 +80,5 @@ def cleanAndConvert():
 
     # Convert .xlsx file to .csv file
     fullPath = "C:/Users/Administrator/PycharmProjects/NaturalDisasterRealTimeRiskLevelPrediction"
-    read_file = pd.read_excel(fullPath + r'/rawData/emdat_public_2022_10_18.xlsx')
-    read_file.to_csv(fullPath + r'/data/emdat_public_2022_10_18.csv', index=None, header=True)
+    read_file = pd.read_excel(fullPath + r'/rawData/emdat_public_2022_11_22.xlsx')
+    read_file.to_csv(fullPath + r'/data/emdat_public_2022_11_22.csv', index=None, header=True)

@@ -1,19 +1,21 @@
 import os
 import pickle
-import string
 
 import pandas as pd
+import sklearn
+import DataConvert
+from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import BernoulliNB
-from fastapi import FastAPI, Request
-from fastapi.encoders import jsonable_encoder
+from sklearn.neighbors import KNeighborsClassifier as KNN
 from starlette.responses import JSONResponse
-import DataConvert
-import DataLoader
 
-source_file = 'data/emdat_public_2022_10_18.csv'
+source_file = 'data/weather_data_for_training.csv'
 app = FastAPI()
+
+
+# api key for current weather: c3a17117399f5b827712b21d570fd21b
 
 
 @app.get('/')
@@ -21,120 +23,68 @@ def basic_view():
     return {"WELCOME": "GO TO /docs route, or /post or send post request to /predict "}
 
 
-# @app.get('/predict/')
-# async def take_inp():
-#     return '''<form method="post">
-#             <input maxlength="28" name="text" type="text" value="Text Emotion to be tested" />
-#             <input type="submit" />'''
-
-
 @app.get('/predict/', response_class=JSONResponse)
-def predict(year: int, type: str, region: str,
-                  magValue: float, magScale: str,
-                  startMonth: int, endMonth: int):
-    # year = 2022
-    # type = "Drought"
-    # region = "South-Eastern Asia"
-    # magValue = 3000
-    # magScale = "Kph"
-    # startMonth = 9
-    # endMonth = 9
-
-    detectionFile = open('detection.h5', 'rb')
+def predict(temp: float, pressure: float, humidity: float, clouds: float, wind_speed: float, wind_deg: float,
+            weather_main: str, weather_des: str, rain_1h: float):
+    detectionFile = open('detection.pickle', 'rb')
     loadedModel = pickle.load(detectionFile)
     detectionFile.close()
 
-    typeFile = open('TypeEncoder.pickle', 'rb')
-    typeEn = pickle.load(typeFile)
-    typeFile.close()
+    weatherMainFile = open('WeatherMainEncoder.pickle', 'rb')
+    weatherMainEn = pickle.load(weatherMainFile)
+    weatherMainFile.close()
 
-    regionFile = open('RegionEncoder.pickle', 'rb')
-    regionEn = pickle.load(regionFile)
-    regionFile.close()
+    weatherDescFile = open('WeatherDescEncoder.pickle', 'rb')
+    weatherDescEn = pickle.load(weatherDescFile)
+    weatherDescFile.close()
 
-    magScaleFile = open('MagScaleEncoder.pickle', 'rb')
-    magScaleEn = pickle.load(magScaleFile)
-    magScaleFile.close()
+    encodedWeatherMain = weatherMainEn.transform([weather_main])
+    encodedWeatherDesc = weatherDescEn.transform([weather_des])
 
-    encodedType = typeEn.transform([type])
-    encodedRegion = regionEn.transform([region])
-    encodedMagScale = magScaleEn.transform([magScale])
+    caseDict = [[temp, pressure, humidity, clouds, wind_speed, wind_deg, encodedWeatherMain[0], encodedWeatherDesc[0], rain_1h]]
 
-    caseDict = [[year, encodedType[0], encodedRegion[0], magValue,
-                 encodedMagScale[0], startMonth, endMonth]]
-
-    print(caseDict)
+    # train here
     result = loadedModel.predict(caseDict)[0]
     return JSONResponse(content=jsonable_encoder(obj=int(result)), media_type="application/json")
 
 
-def _case_features(caseFeatures):
-    return {
-        'year': caseFeatures[1],
-        'type': caseFeatures[2],
-        'region': caseFeatures[3],
-        'magValue': caseFeatures[4],
-        'magScale': caseFeatures[5],
-        'startMonth': caseFeatures[6],
-        'endMonth': caseFeatures[7]
-    }
+def train_and_test():
+    if not (os.path.exists(source_file)):
+        DataConvert.cleanAndConvert()
+
+    data = pd.read_csv(source_file, encoding='utf8')
+
+    # labelEncoder = preprocessing.LabelEncoder()
+    weatherMain = preprocessing.LabelEncoder()
+    weatherDesc = preprocessing.LabelEncoder()
+
+    data['Weather_main'] = weatherMain.fit_transform(data['Weather_main'])
+    data['Weather_des'] = weatherDesc.fit_transform(data['Weather_des'])
+
+    pickle.dump(weatherMain, open('WeatherMainEncoder.pickle', 'wb'))
+    pickle.dump(weatherDesc, open('WeatherDescEncoder.pickle', 'wb'))
+
+    X = data[['Temp', 'Pressure', 'Humidity', 'Clouds', 'Wind_speed', 'Wind_deg',
+              'Weather_main', 'Weather_des',
+              'Rain_1h']]
+    Y = data['Risk_level']
+
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+
+    knn = KNN(n_neighbors=35)
+    knn.fit(X_train, Y_train)
+    Y_pred = knn.predict(X_test)
+    accuracy = sklearn.metrics.accuracy_score(Y_test, Y_pred)
+    print(accuracy)
+
+    file = open('detection.pickle', 'wb')
+    pickle.dump(knn, file)
 
 
 class LevelClassifier:
     def __init__(self):
         pass
 
-    def get_features(self):
-        # classify into 4 level (0 -> 3)
 
-        feature_set = DataLoader.get_case_list()
-
-        return feature_set
-
-    def train_and_test(self):
-        if not (os.path.exists(source_file)):
-            DataConvert.cleanAndConvert()
-
-        data = pd.read_csv(source_file, encoding='utf8')
-        data = data[
-            ['Dis No', 'Year', 'Disaster Type', 'Region', 'Dis Mag Value', 'Dis Mag Scale', 'Start Month',
-             'End Month', 'Calculated Risk Level']]
-
-        labelEncoder = preprocessing.LabelEncoder()
-        typeEncoder = preprocessing.LabelEncoder()
-        regionEncoder = preprocessing.LabelEncoder()
-        magScaleEncoder = preprocessing.LabelEncoder()
-
-        data['Disaster Type'] = typeEncoder.fit_transform(data['Disaster Type'])
-        data['Region'] = regionEncoder.fit_transform(data['Region'])
-        data['Dis Mag Scale'] = magScaleEncoder.fit_transform(data['Dis Mag Scale'])
-
-        pickle.dump(typeEncoder, open('TypeEncoder.pickle', 'wb'))
-        pickle.dump(regionEncoder, open('RegionEncoder.pickle', 'wb'))
-        pickle.dump(magScaleEncoder, open('MagScaleEncoder.pickle', 'wb'))
-
-        X = data[['Year', 'Disaster Type', 'Region', 'Dis Mag Value', 'Dis Mag Scale', 'Start Month',
-                  'End Month']]
-        Y = labelEncoder.fit_transform(data['Calculated Risk Level'])
-
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.20)
-        print(X_train)
-        print(Y_train)
-
-        naiveBayesModel = BernoulliNB()
-        naiveBayesModel.fit(X_train, Y_train)
-
-        file = open('detection.h5', 'wb')
-        pickle.dump(naiveBayesModel, file)
-
-
-if __name__ == "__main__":
-    year = 2000
-    type = "Flood"
-    region = "South-Eastern Asia"
-    magValue = 1000
-    magScale = "Kph"
-    startMonth = 5
-    endMonth = 6
-
-    print(predict(year, type, region, magValue, magScale, startMonth, endMonth))
+if __name__ == '__main__':
+    train_and_test()
