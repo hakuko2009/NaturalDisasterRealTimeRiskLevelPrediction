@@ -2,18 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="62dc6787-195a-450b-b845-0980cdfddef5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/WeatherDescEncoder.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WeatherMainEncoder.pickle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataConvert.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataConvert.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataLoader.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataLoader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LevelClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/LevelClassifier.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/emdat_public_2022_10_18.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detection.h5" beforeDir="false" afterPath="$PROJECT_DIR$/detection.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MagScaleEncoder.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RegionEncoder.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WeatherDescEncoder.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/WeatherDescEncoder.pickle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/detection.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/detection.pickle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/CaseOfDisaster.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/CaseOfDisaster.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rawData/emdat_public_2022_10_18.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +40,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/LevelClassifier.py" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
-  <component name="RunManager" selected="Python.LevelClassifier">
+  <component name="RunManager" selected="Python.DataLoader">
     <configuration name="DataLoader" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="NaturalDisasterRealTimeRiskLevelPrediction" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -91,8 +87,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.LevelClassifier" />
         <item itemvalue="Python.DataLoader" />
+        <item itemvalue="Python.LevelClassifier" />
       </list>
     </recent_temporary>
   </component>
@@ -113,7 +109,9 @@
       <workItem from="1668528735683" duration="5346000" />
       <workItem from="1668564589953" duration="1844000" />
       <workItem from="1668786928744" duration="4208000" />
-      <workItem from="1668993737984" duration="31278000" />
+      <workItem from="1668993737984" duration="33253000" />
+      <workItem from="1669170606853" duration="14870000" />
+      <workItem from="1669301130370" duration="545000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor code">
       <created>1667525935360</created>
@@ -157,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669115089140</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Update /predict api">
+      <created>1669142628485</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1669142628485</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -182,8 +187,19 @@
     <MESSAGE value="Update /predict api" />
     <option name="LAST_COMMIT_MESSAGE" value="Update /predict api" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/DataLoader.py</url>
+          <line>107</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/NaturalDisasterRealTimeRiskLevelPrediction$DataLoader.coverage" NAME="DataLoader Coverage Results" MODIFIED="1669141077694" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/NaturalDisasterRealTimeRiskLevelPrediction$LevelClassifier.coverage" NAME="LevelClassifier Coverage Results" MODIFIED="1669142342529" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NaturalDisasterRealTimeRiskLevelPrediction$DataLoader.coverage" NAME="DataLoader Coverage Results" MODIFIED="1669213456417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NaturalDisasterRealTimeRiskLevelPrediction$LevelClassifier.coverage" NAME="LevelClassifier Coverage Results" MODIFIED="1669213410298" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

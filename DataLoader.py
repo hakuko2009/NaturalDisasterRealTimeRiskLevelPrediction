@@ -8,13 +8,13 @@ import pandas as pd
 
 import DataConvert
 
-source_file = 'data/emdat_public_2022_11_22.csv'
+source_file = 'data/emdat_public.csv'
 dest_file = 'data/weather_data_for_training.csv'
 
 
 def get_data_from_csv():
-    if not (os.path.exists(source_file)):
-        DataConvert.cleanAndConvert()
+    # if not (os.path.exists(source_file)):
+    #     DataConvert.cleanAndConvert()
 
     filePath = os.path.abspath(__file__)
     dir_path = os.path.dirname(filePath) + '/'
@@ -28,15 +28,23 @@ def get_data_from_csv():
         for row in reader:
             # Skip case with missing value
             if str(row['Calculated Risk Level']) == '' \
-                    or str(row['Latitude']) == '' or str(row['Longitude']) == ''\
+                    or str(row['Latitude']) == '' or str(row['Longitude']) == '' \
                     or str(row['Start Year']) == '' or str(row['Start Month']) == '' \
-                    or str(row['Start Day']) == '':
+                    or str(row['Start Day']) == '' or str(row['End Month']) == '' \
+                    or str(row['End Day']) == '':
                 continue
 
             # Call API to create a new file
             year = int(float(row['Start Year']))
-            month = int(float(row['Start Month']))
-            day = int(float(row['Start Day']))
+
+            month = int(float(row['End Month']))
+            if int(float(row['Start Month'])) < int(float(row['End Month'])):
+                month = int((int(float(row['Start Month'])) + int(float(row['End Month']))) / 2)
+
+            day = int(float(row['End Day']))
+            if int(float(row['Start Day'])) < int(float(row['End Day'])):
+                day = int((int(float(row['Start Day'])) + int(float(row['End Day']))) / 2)
+
             epoch = datetime.date(year=1970, month=1, day=1)
             date_time = datetime.date(year=year, month=month, day=day)
             dt = int((date_time - epoch).total_seconds())
@@ -65,8 +73,10 @@ def get_data_from_csv():
                 wind_deg = mainData['wind_deg']
                 weather_main = mainData['weather'][0]['main']
                 weather_des = mainData['weather'][0]['description']
-                if str(response[1]).__contains__("'rain:'"):
-                    rain_1h = mainData['rain']['1h']
+                if str(response[1]).find("'rain':") != -1:
+                    if str(response[1]).find("'1h':") != -1:
+                        rain_1h = mainData['rain']['1h']
+
                 level = int(row['Calculated Risk Level'])
 
                 case_list.append({'No': index + 1, 'Temp': temp, 'Pressure': pressure,
@@ -76,9 +86,11 @@ def get_data_from_csv():
                                   'Rain_1h': rain_1h, 'Risk_level': level})
                 print(case_list[index])
                 index = index + 1
+                if index == 1:
+                    break
 
     try:
-        with open(dest_file, 'w', newline='') as destFile:
+        with open(dir_path + '/' + dest_file, 'w', newline='') as destFile:
             writer = csv.DictWriter(destFile, fieldnames=csv_columns)
             writer.writeheader()
             writer.writerows(case_list)

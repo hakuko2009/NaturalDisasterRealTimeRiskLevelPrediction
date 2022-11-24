@@ -9,6 +9,9 @@ from fastapi.encoders import jsonable_encoder
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier as KNN
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from starlette.responses import JSONResponse
 
 source_file = 'data/weather_data_for_training.csv'
@@ -16,7 +19,6 @@ app = FastAPI()
 
 
 # api key for current weather: c3a17117399f5b827712b21d570fd21b
-
 
 @app.get('/')
 def basic_view():
@@ -41,7 +43,8 @@ def predict(temp: float, pressure: float, humidity: float, clouds: float, wind_s
     encodedWeatherMain = weatherMainEn.transform([weather_main])
     encodedWeatherDesc = weatherDescEn.transform([weather_des])
 
-    caseDict = [[temp, pressure, humidity, clouds, wind_speed, wind_deg, encodedWeatherMain[0], encodedWeatherDesc[0], rain_1h]]
+    caseDict = [
+        [temp, pressure, humidity, clouds, wind_speed, wind_deg, encodedWeatherMain[0], encodedWeatherDesc[0], rain_1h]]
 
     # train here
     result = loadedModel.predict(caseDict)[0]
@@ -69,16 +72,20 @@ def train_and_test():
               'Rain_1h']]
     Y = data['Risk_level']
 
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.10)
 
-    knn = KNN(n_neighbors=35)
+    knn = KNN(n_neighbors=8)
     knn.fit(X_train, Y_train)
-    Y_pred = knn.predict(X_test)
-    accuracy = sklearn.metrics.accuracy_score(Y_test, Y_pred)
-    print(accuracy)
 
     file = open('detection.pickle', 'wb')
     pickle.dump(knn, file)
+    detectionFile = open('detection.pickle', 'rb')
+    loadedModel = pickle.load(detectionFile)
+
+    Y_pred = knn.predict(X_test)
+    print(Y_pred)
+    print(Y_test)
+    print(sklearn.metrics.accuracy_score(Y_pred, Y_test))
 
 
 class LevelClassifier:

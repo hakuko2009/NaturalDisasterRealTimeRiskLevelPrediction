@@ -39,9 +39,9 @@ def cleanAndConvert():
         totalDeaths = int(str(sheet[f'AI{i}'].value))
         if totalDeaths == 0:
             sheet[f'AI{i}'].value = 0
-        elif 0 < totalDeaths <= 20:
+        elif 0 < totalDeaths <= 10:
             sheet[f'AI{i}'].value = 1
-        elif 20 < totalDeaths < 100:
+        elif 10 < totalDeaths < 100:
             sheet[f'AI{i}'].value = 2
         else:
             sheet[f'AI{i}'].value = 3
@@ -65,7 +65,7 @@ def cleanAndConvert():
             sheet[f'AS{i}'].value = 0
         elif 0 < totalDamages < 50000:
             sheet[f'AS{i}'].value = 1
-        elif 50000 < totalDamages < 1000000:
+        elif 50000 < totalDamages < 100000:
             sheet[f'AS{i}'].value = 2
         else:
             sheet[f'AS{i}'].value = 3
@@ -80,5 +80,5 @@ def cleanAndConvert():
 
     # Convert .xlsx file to .csv file
     fullPath = "C:/Users/Administrator/PycharmProjects/NaturalDisasterRealTimeRiskLevelPrediction"
-    read_file = pd.read_excel(fullPath + r'/rawData/emdat_public_2022_11_22.xlsx')
-    read_file.to_csv(fullPath + r'/data/emdat_public_2022_11_22.csv', index=None, header=True)
+    read_file = pd.read_excel(fullPath + r'/rawData/emdat_public.xlsx')
+    read_file.to_csv(fullPath + r'/data/emdat_public.csv', index=None, header=True)
