@@ -3,16 +3,15 @@ import pickle
 
 import pandas as pd
 import sklearn
-import DataConvert
+import uvicorn
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier as KNN
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from starlette.responses import JSONResponse
+
+import DataConvert
 
 source_file = 'data/weather_data_for_training.csv'
 app = FastAPI()
@@ -88,10 +87,6 @@ def train_and_test():
     print(sklearn.metrics.accuracy_score(Y_pred, Y_test))
 
 
-class LevelClassifier:
-    def __init__(self):
-        pass
-
-
 if __name__ == '__main__':
-    train_and_test()
+    # train_and_test()
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

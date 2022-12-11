@@ -3,13 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="62dc6787-195a-450b-b845-0980cdfddef5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataConvert.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataConvert.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataLoader.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataLoader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LevelClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/LevelClassifier.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MagScaleEncoder.pickle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RegionEncoder.pickle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WeatherDescEncoder.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/WeatherDescEncoder.pickle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detection.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/detection.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LevelClassifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +72,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LevelClassifier.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Administrator\PycharmProjects\NaturalDisasterRealTimeRiskLevelPrediction\main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -111,7 +107,10 @@
       <workItem from="1668786928744" duration="4208000" />
       <workItem from="1668993737984" duration="33253000" />
       <workItem from="1669170606853" duration="14870000" />
-      <workItem from="1669301130370" duration="545000" />
+      <workItem from="1669301130370" duration="2850000" />
+      <workItem from="1670661951628" duration="604000" />
+      <workItem from="1670747455550" duration="929000" />
+      <workItem from="1670754562838" duration="12661000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor code">
       <created>1667525935360</created>
@@ -162,7 +161,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669142628485</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Update /predict api">
+      <created>1669312738600</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1669312738600</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -192,7 +198,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/DataLoader.py</url>
-          <line>107</line>
+          <line>104</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

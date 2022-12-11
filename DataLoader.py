@@ -2,11 +2,8 @@ import csv
 import datetime
 import json
 import os.path
-import time
-import requests
-import pandas as pd
 
-import DataConvert
+import requests
 
 source_file = 'data/emdat_public.csv'
 dest_file = 'data/weather_data_for_training.csv'
