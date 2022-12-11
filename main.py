@@ -87,6 +87,6 @@ def train_and_test():
     print(sklearn.metrics.accuracy_score(Y_pred, Y_test))
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # train_and_test()
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    # uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
