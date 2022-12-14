@@ -21,7 +21,7 @@ app = FastAPI()
 
 @app.get('/')
 def basic_view():
-    return {"WELCOME": "GO TO /docs route, or /post or send post request to /predict "}
+    return {"WELCOME": "GO TO /docs route, or /post or send post request to /predict"}
 
 
 @app.get('/predict/', response_class=JSONResponse)
@@ -47,7 +47,7 @@ def predict(temp: float, pressure: float, humidity: float, clouds: float, wind_s
 
     # train here
     result = loadedModel.predict(caseDict)[0]
-    return JSONResponse(content=jsonable_encoder(obj=int(result)), media_type="application/json")
+    return {"risk_level": int(result)}
 
 
 def train_and_test():
@@ -87,6 +87,6 @@ def train_and_test():
     print(sklearn.metrics.accuracy_score(Y_pred, Y_test))
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     # train_and_test()
-    # uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
